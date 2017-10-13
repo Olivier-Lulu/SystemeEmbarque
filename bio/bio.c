@@ -6,19 +6,28 @@
 
 BFILE *bopen(const char *filename, const char *mode)
 {
-	BFILE *stream;
-	int flags;
-	int fd;
-	char md;
+  BFILE *stream;
+  int flags;
+  int fd;
+  char md;
 	
-	if (strcmp(mode,"r") == 0) {
-		flags = O_RDONLY;
-		md = BMODE_READ;
-	} else {
-		errno = EINVAL;
-		return NULL;
-	}
-	if ((fd = open(filename, flags, PERM_FILE)) == -1)
+  if (strcmp(mode,"r") == 0) {
+    flags = O_RDONLY;
+    md = BMODE_READ;
+  } else
+    if(strcmp(mode,"w") == 0){
+      flags = O_WDONLY;
+      md = BMODE_WRITE;
+    }else
+      if(strcmp(mode,"b") == 0){
+	flags = O_RDWR;
+	md = BMODE_RDWR;
+      }else{
+	errno = EINVAL;
+	return NULL;
+      }
+		
+  if ((fd = open(filename, flags, PERM_FILE)) == -1)
 		return NULL;
 	if ((stream=(BFILE *)malloc(sizeof(BFILE)))!=NULL) {
 		stream->fd=fd;
