@@ -33,6 +33,7 @@ BFILE *bopen(const char *filename, const char *mode)
 		stream->fd=fd;
 		stream->mode=md;
 		stream->pos=0;
+		stream->currentMode = BMODE_READ;
 	}
 	return stream;
 }
@@ -42,10 +43,12 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 	char *ptr;
 	ssize_t more;
 
-	if ((stream==NULL)||(stream->mode!=BMODE_READ)) {
+	if ((stream==NULL)||(stream->mode==BMODE_WRITE)) {
 		errno = EBADF;
 		return 0;
 	}
+	if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_WRITE)
+	  bflush(buf);
 	more=size;
 	ptr=buf;
 
@@ -73,7 +76,7 @@ int bwrite (void * buf, ssize_t, BFILE * stream)
 
 int bflush (BFILE * stream)
 {
-
+  
 }
 
 int beof(BFILE *stream)
