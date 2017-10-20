@@ -76,7 +76,11 @@ int bwrite (void * buf, ssize_t, BFILE * stream)
 
 int bflush (BFILE * stream)
 {
-  
+  if(write(stream->fd,stream->buf,stream->fill - stream->pos)==-1)
+    return -1;
+  stream->fill = 0;
+  stream->pos = 0;
+  return 0;
 }
 
 int beof(BFILE *stream)
