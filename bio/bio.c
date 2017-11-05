@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <sys/errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -48,7 +49,7 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 		return 0;
 	}
 	if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_WRITE){
-		bflush(buf);
+		bflush(stream);
 		stream -> currentMode = BMODE_READ;
 	}
 	more=size;
@@ -92,12 +93,13 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
 		lseek(stream -> fd, (- further), SEEK_CUR);
 	}
 
-	while (stream -> pos + further > stream -> fill) {
-		memcpy(&stream -> buf[stream -> pos], ptr, stream -> fill - stream -> pos);
-		stream -> pos = 0;
-		ptr += stream -> fill - stream -> pos;
-		further -= stream -> fill - stream -> pos;
+	while (stream->pos + further > stream->fill) {
+		memcpy(&stream->buf[stream->pos], ptr, (stream->fill - stream->pos));
+		ptr += stream->fill - stream->pos;
+		further -= stream->fill - stream->pos;
 		bflush(stream);
+		fprintf(stdout, "pos : %d | fill : %d | further : %d\n", (int) stream->pos, (int) stream->fill, (int) further);
+		return -1;
 	}
 
 	memcpy(&stream -> buf[stream -> pos], ptr, further);
@@ -109,7 +111,7 @@ int bflush (BFILE * stream)
 {
   if(write(stream->fd,stream->buf,stream->fill - stream->pos)==-1)
     return -1;
-  stream->fill = 0;
+  //stream->fill = 0;
   stream->pos = 0;
   return 0;
 }
