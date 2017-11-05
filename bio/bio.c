@@ -16,7 +16,7 @@ BFILE *bopen(const char *filename, const char *mode)
     md = BMODE_READ;
   } else
     if(strcmp(mode,"w") == 0){
-      flags = O_WDONLY;
+      flags = O_WRONLY;
       md = BMODE_WRITE;
     }else
       if(strcmp(mode,"b") == 0){
@@ -28,14 +28,14 @@ BFILE *bopen(const char *filename, const char *mode)
       }
 		
   if ((fd = open(filename, flags, PERM_FILE)) == -1)
-		return NULL;
-	if ((stream=(BFILE *)malloc(sizeof(BFILE)))!=NULL) {
-		stream->fd=fd;
-		stream->mode=md;
-		stream->pos=0;
-		stream->currentMode = BMODE_READ;
-	}
-	return stream;
+    return NULL;
+  if ((stream=(BFILE *)malloc(sizeof(BFILE)))!=NULL) {
+    stream->fd=fd;
+    stream->mode=md;
+    stream->pos=0;
+    stream->currentMode = BMODE_READ;
+  }
+  return stream;
 }
 
 ssize_t bread(void *buf, ssize_t size, BFILE *stream)
@@ -69,9 +69,9 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 	return size;
 }
 
-int bwrite (void * buf, ssize_t, BFILE * stream)
+int bwrite (void * buf, ssize_t size, BFILE * stream)
 {
-
+  return 0;
 }
 
 int bflush (BFILE * stream)
