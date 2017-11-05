@@ -47,8 +47,10 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 		errno = EBADF;
 		return 0;
 	}
-	if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_WRITE)
-	  bflush(buf);
+	if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_WRITE){
+		bflush(buf);
+		stream -> currentMode = BMODE_READ;
+	}
 	more=size;
 	ptr=buf;
 
@@ -90,14 +92,16 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
 		lseek(stream -> fd, (- further), SEEK_CUR);
 	}
 
-	while (((stream -> pos + stream -> fill) <= further) && (!(stream -> eof))) {
-		memcpy(&stream -> but[stream -> pos], ptr, further);
-		stream -> pos += further;
-		ptr += (stream -> pos + stream -> fill);
-		further -= (stream -> pos + stream -> fill);
+	while (stream -> pos + further > stream -> fill) {
+		memcpy(&stream -> buf[stream -> pos], ptr, stream -> fill - stream -> pos);
+		stream -> pos = 0;
+		ptr += stream -> fill - stream -> pos;
+		further -= stream -> fill - stream -> pos;
 		bflush(stream);
 	}
-	
+
+	memcpy(&stream -> buf[stream -> pos], ptr, further);
+
 	return size;
 }
 
