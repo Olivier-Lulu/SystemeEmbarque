@@ -1,15 +1,15 @@
-OBJS=bio.o cat.o
+OBJS=bio.o bcp.o
 
 CC=gcc
 CFLAGS=-Wall -Werror -g
 
-all: cat
+all: bcp
 	
-cat: $(OBJS)
+bcp: $(OBJS)
 	$(CC) -o $@ $(OBJS)
 
 clean:
 	-\rm -rf $(OBJS)
 	
-cat.o: bio.h
-bio.o: bio.h
+bcp.o: bcp.c bio.h
+bio.o: bio.c bio.h
