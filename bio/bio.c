@@ -76,12 +76,15 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
 		return 0;
 	}
 
-	if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ)
-		stream -> currentMode = BMODE_WRITE;
-	
 	char * ptr = buf;
 	ssize_t further = size;
-	
+
+	if (stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ){
+		stream -> currentMode = BMODE_WRITE;
+		bflush(stream);
+		lseek(stream -> fd, (- further), SEEK_CUR);
+	}
+
 	memcpy(&stream -> buf[stream -> pos], ptr, further);
 	stream -> pos += further;
 	
