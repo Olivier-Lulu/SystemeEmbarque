@@ -75,6 +75,11 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
 		errno = EBADF;
 		return 0;
 	}
+	
+	if (stream -> eof) {
+		errno = EBADFD;
+		return 0;
+	}
 
 	char * ptr = buf;
 	ssize_t further = size;
@@ -85,10 +90,14 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
 		lseek(stream -> fd, (- further), SEEK_CUR);
 	}
 
-	memcpy(&stream -> buf[stream -> pos], ptr, further);
-	stream -> pos += further;
+	while (((stream -> pos + stream -> fill) <= further) && (!(stream -> eof))) {
+		memcpy(&stream -> but[stream -> pos], ptr, further);
+		stream -> pos += further;
+		ptr += (stream -> pos + stream -> fill);
+		further -= (stream -> pos + stream -> fill);
+		bflush(stream);
+	}
 	
-	bflush(buf);
 	return size;
 }
 
