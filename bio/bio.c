@@ -29,14 +29,15 @@ BFILE *bopen(const char *filename, const char *mode)
       }
 		
   if ((fd = open(filename, flags, PERM_FILE)) == -1)
-		return NULL;
-	if ((stream=(BFILE *)malloc(sizeof(BFILE)))!=NULL) {
-		stream->fd=fd;
-		stream->mode=md;
-		stream->pos=0;
-		stream->currentMode = BMODE_READ;
-	}
-	return stream;
+    return NULL;
+  if ((stream=(BFILE *)malloc(sizeof(BFILE)))!=NULL) {
+    stream->fd=fd;
+    stream->mode=md;
+    stream->pos=0;
+    stream->fill=BBUFSIZ;
+    stream->currentMode = BMODE_READ;
+  }
+  return stream;
 }
 
 ssize_t bread(void *buf, ssize_t size, BFILE *stream)
@@ -74,44 +75,41 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 
 int bwrite (void * buf, ssize_t size, BFILE * stream)
 {
-	if ((stream == NULL) || (stream->mode == BMODE_READ)) {
-		errno = EBADF;
-		return 0;
-	}
+  if ((stream == NULL) || (stream->mode == BMODE_READ)) {
+    errno = EBADF;
+    return 0;
+  }
 	
-	if (stream -> eof) {
-		errno = EBADFD;
-		return 0;
-	}
+  if (stream -> eof) {
+    errno = EBADFD;
+    return 0;
+  }
 
-	char * ptr = buf;
-	ssize_t further = size;
+  char * ptr = buf;
+  ssize_t further = size;
 
-	if (stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ){
-		stream -> currentMode = BMODE_WRITE;
-		bflush(stream);
-		lseek(stream -> fd, (- further), SEEK_CUR);
-	}
-
-	while (stream->pos + further > stream->fill) {
-		memcpy(&stream->buf[stream->pos], ptr, (stream->fill - stream->pos));
-		ptr += stream->fill - stream->pos;
-		further -= stream->fill - stream->pos;
-		bflush(stream);
-		fprintf(stdout, "pos : %d | fill : %d | further : %d\n", (int) stream->pos, (int) stream->fill, (int) further);
-		return -1;
-	}
-
-	memcpy(&stream -> buf[stream -> pos], ptr, further);
-
-	return size;
+  if (stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ){
+    stream -> currentMode = BMODE_WRITE;
+    bflush(stream);
+    lseek(stream -> fd, (- further), SEEK_CUR);
+  }
+  while (stream->pos + further > stream->fill) {
+    memcpy(&stream->buf[stream->pos], ptr, (stream->fill - stream->pos));
+    ptr += stream->fill - stream->pos;
+    further -= stream->fill - stream->pos;
+    bflush(stream);
+  }
+  
+  memcpy(&stream -> buf[stream -> pos], ptr, further);
+  stream-> pos += further;
+  
+  return size;
 }
 
 int bflush (BFILE * stream)
 {
-  if(write(stream->fd,stream->buf,stream->fill - stream->pos)==-1)
+  if(write(stream->fd,stream->buf,stream->pos)==-1)
     return -1;
-  //stream->fill = 0;
   stream->pos = 0;
   return 0;
 }

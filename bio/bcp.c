@@ -35,6 +35,7 @@ int main(int argc,char* argv[]){
       break;
     }
   }
+  bflush(cible);
   bclose(source);
   bclose(cible);
   return 0;
