@@ -80,10 +80,10 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
     return 0;
   }
 	
-  if (stream -> eof) {
+  /*if (stream -> eof) {
     errno = EBADFD;
     return 0;
-  }
+  }*/
 
   char * ptr = buf;
   ssize_t further = size;
@@ -91,7 +91,7 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
   if (stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ){
     stream -> currentMode = BMODE_WRITE;
     bflush(stream);
-    lseek(stream -> fd, (- further), SEEK_CUR);
+    lseek(stream -> fd, (- stream->fill), SEEK_CUR);
   }
   while (stream->pos + further > BBUFSIZ) {
     memcpy(&stream->buf[stream->pos], ptr, (BBUFSIZ - stream->pos));
