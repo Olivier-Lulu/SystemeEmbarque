@@ -34,7 +34,7 @@ BFILE *bopen(const char *filename, const char *mode)
     stream->fd=fd;
     stream->mode=md;
     stream->pos=0;
-    stream->fill=BBUFSIZ;
+    stream->fill=0;
     stream->currentMode = BMODE_READ;
   }
   return stream;
@@ -93,10 +93,10 @@ int bwrite (void * buf, ssize_t size, BFILE * stream)
     bflush(stream);
     lseek(stream -> fd, (- further), SEEK_CUR);
   }
-  while (stream->pos + further > stream->fill) {
-    memcpy(&stream->buf[stream->pos], ptr, (stream->fill - stream->pos));
-    ptr += stream->fill - stream->pos;
-    further -= stream->fill - stream->pos;
+  while (stream->pos + further > BBUFSIZ) {
+    memcpy(&stream->buf[stream->pos], ptr, (BBUFSIZ - stream->pos));
+    ptr += BBUFSIZ - stream->pos;
+    further -= BBUFSIZ - stream->pos;
     bflush(stream);
   }
   
@@ -111,6 +111,7 @@ int bflush (BFILE * stream)
   if(write(stream->fd,stream->buf,stream->pos)==-1)
     return -1;
   stream->pos = 0;
+  stream->fill = 0;
   return 0;
 }
 
