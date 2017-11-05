@@ -71,7 +71,22 @@ ssize_t bread(void *buf, ssize_t size, BFILE *stream)
 
 int bwrite (void * buf, ssize_t size, BFILE * stream)
 {
-  return 0;
+  if ((stream == NULL) || (stream->mode == BMODE_READ)) {
+    errno = EBADF;
+    return 0;
+  }
+  
+  if(stream->mode==BMODE_RDWR && stream->currentMode==BMODE_READ)
+    stream -> currentMode = BMODE_WRITE;
+  
+  char * ptr = buf;
+  ssize_t further = size;
+  
+  memcpy(&stream -> buf[stream -> pos], ptr, further);
+  stream -> pos += further;
+  
+  bflush(buf);
+  return size;
 }
 
 int bflush (BFILE * stream)
