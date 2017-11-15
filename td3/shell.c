@@ -7,18 +7,6 @@
 
 #define SZ 1024
 
-
-
-
-
-/*
- *execute une a une les instructions du fichier (comme main mais avec file a la place de stdin)
- *n'affiche pas de terminal
- */
-int parse_scripte(FILE* file){
-
-}
-
 /*
  *cmd arg1 ... argN NULL
  *
@@ -37,17 +25,9 @@ int simple_cmd(char* argv[]){
 	wait(NULL);
 	return 0;
       }else{
-	//fils
-	FILE* file = fopen(argv[0],"r");
-	if(file){
-	  parse_scripte(file);
-	  fclose(file);
-	  return 0;
-	}else{
-	  execvp(argv[0],argv);
-	  perror("execvp");
-	  exit(-1);
-	}
+	execvp(argv[0],argv);
+	perror("execvp");
+	exit(-1);
       }
     }else{
       //si exit
@@ -60,29 +40,52 @@ int simple_cmd(char* argv[]){
   }
 }
 
+//parse les cmd utilisant un pipe
+int parse_pipe(char * s){
+  /*int pipes [2];
+  if(!(pipe(pipes))){
+    perror("pipe");
+    exit(1);
+  }
+  char* p;
+  if((p = strbrk(s,"|")))
+    *p = '\0';
+  p++;
+  char * cmd1 = s;
+  if(fork()){
+
+  }else{
+    write(pipes[0]);
+    char * argv[2];
+    argv[0] = "shell";
+    argv[1] = pipes[1];
+    execvp("shell",argv);
+    perror("execvp");
+    exit(-1);
+    }*/
+  return 0;
+}
 
 /*
- *utiliser par parse_line pour parser les cmd standars
+ *utiliser par parse_line pour parser les cmd standards
  */
 int parse_cmd(char * s){
   char* argv[16];
-  char * p = s;
+  char * p;
   int i = 1;
-  argv[0] = s;
-  p = strpbrk(p,"\n");
-  if(p)
-    *p = '\0';
   p = s;
+  while(*p && *p==' ')
+    p++;
+  if(!*p)
+    return 0;
+  argv[0] = p;
   while((p = strpbrk(p," "))){
     *p = '\0';
     p++;
-    while(*p && *p==' ' && *p != '#')
+    while(*p && *p==' ')
       p++;
-    if(*p == '#')
-      break;
-    if(*p){
+    if(*p)
       argv[i++] = p;
-    }
   }
   argv[i] = NULL;
   for(int j=0;j<i;j++){
@@ -109,8 +112,9 @@ int parse_variable(char* variable,char* valeur){
  */
 int parse_line(char * s){
   char * p;
-  p = strpbrk(s,"\n");
-  if(p)
+  if((p = strpbrk(s,"\n")))
+    *p = '\0';
+  if((p = strpbrk(s,"#")))
     *p = '\0';
   p = strpbrk(s,"=");
   if(p && *(p-1) != ' ' && *(p+1) != ' '){
@@ -119,17 +123,31 @@ int parse_line(char * s){
     return parse_variable(s,p);
   }else{
     //p est null donc pas de =
-    return parse_cmd(s);  
+
+    if((p = strpbrk(s,"|")))
+      //si contient un pipe
+      return parse_pipe(s);
+    else
+      return parse_cmd(s);  
   }
 }
 
 
 int main (int argc,char * argv[]){
+  FILE* fd = stdin;
+  if(argc == 2)
+    if((fd = fopen(argv[1],"r")) == NULL){
+      perror("fopen");
+      exit(1);
+    }
   char buf[SZ];
-  while(1){
-    printf("$");
+  while(!feof(fd)){
+    if(fd == stdin)
+      printf("$");
     fflush(stdout);
-    fgets(buf,SZ,stdin);
+    fgets(buf,SZ,fd);
     parse_line(buf);
   }
+  fclose(fd);
+  exit(0);
 }
