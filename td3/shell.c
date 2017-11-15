@@ -3,6 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define SZ 1024
 
@@ -70,7 +73,17 @@ int parse_pipe(char * s){
  * execute la commande dans argv avec in en fluc d'entree et out en flux de sortie
  */
 int redir_cmd(char* argv[], char* in, char* out) {
+	int fdi, fdo;
+  if (in) {
+    fdi=open(in, O_RDONLY);
+    dup2(fdi, STDIN_FILENO);
+  }
+  if (out) {
+    fdo=open(out, O_CREAT|O_TRUNC|O_WRONLY, 0666);
+    dup2(fdo, STDOUT_FILENO);
+  }
 
+  return simple_cmd(argv);
 }
 
 
@@ -92,7 +105,7 @@ int parse_cmd(char * s){
     p++;
     while(*p && *p==' ')
       p++;
-    if(*p != ">" && *p != "<") {
+    if(*p != '>' && *p != '<') {
       argv[i++] = p;
     } else {
       break;
@@ -109,43 +122,54 @@ int parse_cmd(char * s){
   
   char* redir_in = strpbrk(s, "<");
   char* redir_out = strpbrk(s, ">");
-  char* in, out;
+  char* in;
+	char* out;
   
   if (redir_in) {
     if (redir_out) {
       if (redir_in < redir_out){
-	redir_in++;
-	while (*redir_in++ == " ");
+				redir_in++;
+				while (*redir_in == ' ')
+					redir_in++;
 	
-	redir_out--;
-	while (*redit_out-- == " ");
-	++redir_out='\0';
-	in = redir_in;
+				redir_out--;
+				while (*redir_out == ' ')
+					redir_out--;
+				*(++redir_out) = '\0';
+				in = redir_in;
 	
-	redir_out++ = strpbrk(s, ">");
-        while (*redit_out++ == " ");
+				redir_out = strpbrk(s, ">");
+				redir_out++;
+        while (*redir_out == ' ')
+					redir_out++;
         out = redir_out;
 	
-	redir_cmd(argv, in, out);
+				redir_cmd(argv, in, out);
+
       } else {
-	redir_out++;
-        while (*redir_out++ == " ");
+				redir_out++;
+        while (*redir_out == ' ')
+					redir_out++;
 	
         redir_in--;
-        while (*redit_in-- == " ");
-        ++redir_in='\0';
+        while (*redir_in == ' ')
+					redir_in--;
+        *(++redir_in)='\0';
         out = redir_out;
         
-        redir_in++ = strpbrk(s, "<");
-        while (*redit_in++ == " ");
+        redir_in = strpbrk(s, "<");
+				redir_in++;
+        while (*redir_in == ' ')
+					redir_in++;
         in = redir_out;
 	
         redir_cmd(argv, in, out);
-	return 0;
+				return 0;
       }
     } else {
       redir_in++;
-      while (*redir_in++ == " ");
+      while (*redir_in == ' ')
+				redir_in++;
       in = redir_in;
       
       redir_cmd(argv, in, NULL);
@@ -154,7 +178,8 @@ int parse_cmd(char * s){
   } else {
     if (redir_out) {
       redir_out++;
-      while (*redir_out++ == " ");
+      while (*redir_out == ' ')
+				redir_out++;
       
       out = redir_out;
       redir_cmd(argv, NULL, out);
