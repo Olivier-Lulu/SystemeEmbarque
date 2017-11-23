@@ -9,6 +9,8 @@
 
 #define SZ 1024
 
+int parse_line(char * s);
+
 /*
  *cmd arg1 ... argN NULL
  *
@@ -40,33 +42,6 @@ int simple_cmd(char* argv[]){
     chdir(argv[1]);
     return 0;
   }
-}
-
-
-//parse les cmd utilisant un pipe
-int parse_pipe(char * s){
-  /*int pipes [2];
-  if(!(pipe(pipes))){
-    perror("pipe");
-    exit(1);
-  }
-  char* p;
-  if((p = strbrk(s,"|")))
-    *p = '\0';
-  p++;
-  char * cmd1 = s;
-  if(fork()){
-
-  }else{
-    write(pipes[0]);
-    char * argv[2];
-    argv[0] = "shell";
-    argv[1] = pipes[1];
-    execvp("shell",argv);
-    perror("execvp");
-    exit(-1);
-    }*/
-  return 0;
 }
 
 /*
@@ -117,6 +92,9 @@ int parse_cmd(char * s){
       char * valeur = getenv(argv[j]+1);
       if(valeur)
 	argv[j] = valeur;
+    }else if(!*argv[j]){
+      argv[j] = NULL;
+      break;
     }
   }
   
@@ -200,16 +178,97 @@ int parse_variable(char* variable,char* valeur){
   return 0;
 }
 
+
+int fdpipe;
+/*
+ *copie du code celene, avec parse-line a la place de execvp
+ */
+void start_cmd(char* arg)
+{
+  int fd[2];
+
+  pipe(fd);
+  if (fork()) { /* pere */
+    close(fd[1]);
+    fdpipe=fd[0];
+  } else { /* fils */
+    dup2(fd[1],STDOUT_FILENO);
+    close(fd[0]);
+    close(fd[1]);
+    parse_line(arg);
+    exit(0);
+  }
+}
+
+/*
+ *copie du code celene, avec parse-line a la place de execvp
+ */
+void next_cmd(char * arg)
+{
+   int fd[2];
+
+   pipe(fd);
+   if (fork()) { /* pere */
+     close(fdpipe);
+     close(fd[1]);
+     fdpipe=fd[0];
+   } else { /* fils */
+     dup2(fdpipe,STDIN_FILENO);
+     dup2(fd[1],STDOUT_FILENO);
+     close(fd[0]);
+     close(fd[1]);
+     close(fdpipe);
+     parse_line(arg);
+     exit(0);
+   }
+}
+
+/*
+ *copie du code celene, avec parse-line a la place de execvp
+ */
+void last_cmd(char * arg)
+{
+   int pid, st;
+
+   if ((pid=fork())) { /* pere */
+     close(fdpipe);
+     waitpid(pid,&st,0);
+   } else { /* fils */
+     dup2(fdpipe,STDIN_FILENO);
+     close(fdpipe);
+     parse_line(arg);
+     exit(0);
+   }
+}
+
+//parse les cmd utilisant un pipe
+int parse_pipe(char * s){
+  char* p;
+  if((p = strpbrk(s,"|")))
+    *p = '\0';
+  p++;
+  char * cmd = s;
+  start_cmd(s);
+  cmd = p;
+  while((p = strpbrk(p,"|"))){
+    *p = '\0';
+    p++;
+    next_cmd(cmd);
+    cmd = p;
+  }
+  last_cmd(cmd);
+  return 0;
+}
+
 /*
  *parse s et appelle simple_cmd
  */
 int parse_line(char * s){
   char * p;
   if((p = strpbrk(s,"\n")))
-    *p = '\0';
+    *p= '\0';
   if((p = strpbrk(s,"#")))
     *p = '\0';
-
   p = strpbrk(s,"=");
   if(p && *(p-1) != ' ' && *(p+1) != ' '){
     *p = '\0';
