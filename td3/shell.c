@@ -111,6 +111,7 @@ int parse_cmd(char * s){
       break;
     }
   }
+
   char* redir_in = strpbrk(s, "<");
   char* redir_out = strpbrk(s, ">");
   char* in;
@@ -134,6 +135,9 @@ int parse_cmd(char * s){
 	redir_out++;
 	while (*redir_out == ' ')
 	  redir_out++;
+	char* zero_pointer;
+	if ((zero_pointer = (strpbrk(redir_out, " "))))
+		*zero_pointer = '\0';
 	out = redir_out;
 	      
 	return redir_cmd(argv, in, out);
@@ -154,6 +158,9 @@ int parse_cmd(char * s){
 	redir_in++;
 	while (*redir_in == ' ')
 	  redir_in++;
+	char* zero_pointer;
+	if ((zero_pointer = (strpbrk(redir_in, " "))))
+		*zero_pointer='\0';
 	in = redir_in;
 	
 	return redir_cmd(argv, in, out);
@@ -161,8 +168,11 @@ int parse_cmd(char * s){
     } else {
       redir_in++;
       while (*redir_in == ' ')
-	redir_in++;
-      in = redir_in;
+				redir_in++;
+			char* zero_pointer;
+			if ((zero_pointer = (strpbrk(redir_in, " "))))
+				*zero_pointer='\0';
+			in = redir_in;
       
       return redir_cmd(argv, in, NULL);
     }
@@ -170,7 +180,10 @@ int parse_cmd(char * s){
     if (redir_out) {
       redir_out++;
       while (*redir_out == ' ')
-	redir_out++;
+				redir_out++;
+			char* zero_pointer;
+			if ((zero_pointer = (strpbrk(redir_out, " "))))
+				*zero_pointer='\0';
       
       out = redir_out;
       return redir_cmd(argv, NULL, out);
