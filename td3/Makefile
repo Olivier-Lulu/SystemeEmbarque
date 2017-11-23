@@ -1,10 +1,12 @@
+OBJS=shell.c
+
 CC=gcc
 CFLAGS=-Wall -Werror -g
 
-all: cat
+all: shell
 
-cat: $(OBJS)
-	$(CC) -o $@ $(OBJS)
+shell: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
 clean:
 	-\rm -rf $(OBJS)

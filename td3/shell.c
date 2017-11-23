@@ -8,6 +8,7 @@
 #include <fcntl.h>
 
 #define SZ 1024
+#define MAXARGS 16
 
 int parse_line(char * s);
 
@@ -48,7 +49,9 @@ int simple_cmd(char* argv[]){
  * execute la commande dans argv avec in en fluc d'entree et out en flux de sortie
  */
 int redir_cmd(char* argv[], char* in, char* out) {
-	int fdi, fdo;
+  int mem_stdin = dup(STDIN_FILENO);
+  int mem_stdout = dup(STDOUT_FILENO);
+  int fdi, fdo;
   if (in) {
     fdi=open(in, O_RDONLY);
     dup2(fdi, STDIN_FILENO);
@@ -58,7 +61,17 @@ int redir_cmd(char* argv[], char* in, char* out) {
     dup2(fdo, STDOUT_FILENO);
   }
 
-  return simple_cmd(argv);
+  int res = simple_cmd(argv);
+  if(in){
+    close(fdi);
+    dup2(mem_stdin, STDIN_FILENO);
+  }
+  if(out){
+    close(fdo);
+    dup2(mem_stdout, STDOUT_FILENO);
+  }
+
+  return res;
 }
 
 
@@ -66,10 +79,11 @@ int redir_cmd(char* argv[], char* in, char* out) {
  *utilise par parse_line pour parser les cmd standards
  */
 int parse_cmd(char * s){
-  char* argv[16];
-  char * p;
+  char* argv[MAXARGS];
+  char * p = malloc(sizeof(char)*strlen(s));
+  strcpy(p,s);
   int i = 1;
-  p = s;
+
   while(*p && *p==' ')
     p++;
   if(!*p)
@@ -97,76 +111,76 @@ int parse_cmd(char * s){
       break;
     }
   }
-  
-  char* redir_in = strpbrk(s, "<");
-  char* redir_out = strpbrk(s, ">");
+
+  char* s_copy = malloc(sizeof(char)*strlen(s));
+  strcpy(s_copy,s);
+  char* redir_in = strpbrk(s_copy, "<");
+  char* redir_out = strpbrk(s_copy, ">");
   char* in;
-	char* out;
-  
+  char* out;
+
   if (redir_in) {
     if (redir_out) {
       if (redir_in < redir_out){
-				redir_in++;
-				while (*redir_in == ' ')
-					redir_in++;
-	
-				redir_out--;
-				while (*redir_out == ' ')
-					redir_out--;
-				*(++redir_out) = '\0';
-				in = redir_in;
-	
-				redir_out = strpbrk(s, ">");
-				redir_out++;
-        while (*redir_out == ' ')
-					redir_out++;
-        out = redir_out;
-	
-				redir_cmd(argv, in, out);
-
+	redir_in++;
+	while (*redir_in == ' ')
+	  redir_in++;
+	      
+	redir_out--;
+	while (*redir_out == ' ')
+	  redir_out--;
+	redir_out++;
+	*redir_out = '\0';
+	in = redir_in;
+	      
+	redir_out = strpbrk(s, ">");
+	redir_out++;
+	while (*redir_out == ' ')
+	  redir_out++;
+	out = redir_out;
+	      
+	return redir_cmd(argv, in, out);
+	      
       } else {
-				redir_out++;
-        while (*redir_out == ' ')
-					redir_out++;
-	
-        redir_in--;
-        while (*redir_in == ' ')
-					redir_in--;
-        *(++redir_in)='\0';
-        out = redir_out;
+	redir_out++;
+	while (*redir_out == ' ')
+	  redir_out++;
+	      
+	redir_in--;
+	while (*redir_in == ' ')
+	  redir_in--;
+	redir_in++;
+	*redir_in='\0';
+	out = redir_out;
         
-        redir_in = strpbrk(s, "<");
-				redir_in++;
-        while (*redir_in == ' ')
-					redir_in++;
-        in = redir_out;
+	redir_in = strpbrk(s, "<");
+	redir_in++;
+	while (*redir_in == ' ')
+	  redir_in++;
+	in = redir_in;
 	
-        redir_cmd(argv, in, out);
-				return 0;
+	return redir_cmd(argv, in, out);
       }
     } else {
       redir_in++;
       while (*redir_in == ' ')
-				redir_in++;
+	redir_in++;
       in = redir_in;
       
-      redir_cmd(argv, in, NULL);
-      return 0;
+      return redir_cmd(argv, in, NULL);
     }
   } else {
     if (redir_out) {
       redir_out++;
       while (*redir_out == ' ')
-				redir_out++;
+	redir_out++;
       
       out = redir_out;
-      redir_cmd(argv, NULL, out);
-      return 0;
+      return redir_cmd(argv, NULL, out);
     }
   }
   
-  simple_cmd(argv);
-  return 0;
+  return simple_cmd(argv);
 }
 
 /*
@@ -229,7 +243,9 @@ void next_cmd(char * arg)
 void last_cmd(char * arg)
 {
    int pid, st;
-
+   char buff[1024];
+   read(fdpipe,buff,1024);
+   puts(buff);
    if ((pid=fork())) { /* pere */
      close(fdpipe);
      waitpid(pid,&st,0);
