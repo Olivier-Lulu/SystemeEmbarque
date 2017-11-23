@@ -111,11 +111,8 @@ int parse_cmd(char * s){
       break;
     }
   }
-
-  char* s_copy = malloc(sizeof(char)*strlen(s));
-  strcpy(s_copy,s);
-  char* redir_in = strpbrk(s_copy, "<");
-  char* redir_out = strpbrk(s_copy, ">");
+  char* redir_in = strpbrk(s, "<");
+  char* redir_out = strpbrk(s, ">");
   char* in;
   char* out;
 
@@ -130,10 +127,10 @@ int parse_cmd(char * s){
 	while (*redir_out == ' ')
 	  redir_out--;
 	redir_out++;
-	*redir_out = '\0';
+	*redir_out++ = '\0';
 	in = redir_in;
 	      
-	redir_out = strpbrk(s, ">");
+	redir_out = strpbrk(redir_out, ">");
 	redir_out++;
 	while (*redir_out == ' ')
 	  redir_out++;
@@ -150,7 +147,7 @@ int parse_cmd(char * s){
 	while (*redir_in == ' ')
 	  redir_in--;
 	redir_in++;
-	*redir_in='\0';
+	*redir_in++='\0';
 	out = redir_out;
         
 	redir_in = strpbrk(s, "<");
@@ -179,8 +176,10 @@ int parse_cmd(char * s){
       return redir_cmd(argv, NULL, out);
     }
   }
-  
-  return simple_cmd(argv);
+
+  int r = simple_cmd(argv);
+  free(p);
+  return r;
 }
 
 /*
@@ -242,10 +241,7 @@ void next_cmd(char * arg)
  */
 void last_cmd(char * arg)
 {
-   int pid, st;
-   char buff[1024];
-   read(fdpipe,buff,1024);
-   puts(buff);
+  int pid, st;
    if ((pid=fork())) { /* pere */
      close(fdpipe);
      waitpid(pid,&st,0);
