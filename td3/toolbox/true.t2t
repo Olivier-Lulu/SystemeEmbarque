@@ -7,13 +7,13 @@ November 23, 2017
 
 = NAME =
 
-true -- a function that succeed 
+true -- a function that succeeds 
 
 = SYNOPSIS =
 
 **true**
 
 = DESCRIPTION =
-  The **true** utility alwais succeed.
+  The **true** utility always succeed.
 = EXIT STATUS =
-The **true** utility alwais return 0.
+The **true** utility always return 0.

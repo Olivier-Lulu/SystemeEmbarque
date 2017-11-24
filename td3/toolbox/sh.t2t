@@ -14,9 +14,9 @@ sh -- a little shell
 **sh** [filename]
 
 = DESCRIPTION =
-  The **sh** utility provide a shell interpretor with the following options:
-      - use ('<') and ('>') to redirect input and output to files
-      - use ('|') to redirect input and output to other command
+  The **sh** utility provides a shell interpretor with the following options:
+      - use ('<') and ('>') to redirect command input and output to files
+      - use ('|') to redirect command input and output to other command(s)
       - use ('=') to assign value to a variable (exemple: variable=value without blank near the ('='))
       - use ('$') to interpolate variable already declared
 

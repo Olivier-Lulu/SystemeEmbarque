@@ -7,14 +7,14 @@ November 24, 2017
 
 = NAME =
 
-cp -- copy given file to specified pathname if possible.
+cp -- copies given file to specified pathname if possible.
 
 = SYNOPSIS =
 
-**echo** [filename]
+**echo** SOURCE DEST
 
 = DESCRIPTION =
-The **cp** utility copy a file to the given pathname if it is valid. It's a buffered copy. cp set perror if it can't open src file, or can't open dest file. 
+The **cp** utility copies SOURCE to DEST if both are valid pathnames. It's a buffered copy. 
 
 = EXIT STATUS =
-The **cp** utility exists 0 if it could read the file, 1 if bad arguments are passed, or 2 if given pathnames are not valid.
+The **cp** utility exists 0 if it could read the file, 1 if bad arguments are passed, or 2 if given pathnames are not valid. Upon error, errno is set appropriatly.

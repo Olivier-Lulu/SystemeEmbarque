@@ -1,0 +1,20 @@
+LINK
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+link -- a function that creates a symbolic link between two files
+
+= SYNOPSIS =
+
+**link** SOURCE DEST 
+
+= DESCRIPTION =
+  The **link** utility creates a symbolic link between SOURCE and DEST.
+  
+= EXIT STATUS =
+  On success, zero is returned. On error, 1 is returned, and errno is set appropriately.

@@ -1,0 +1,19 @@
+RMDIR
+
+November 24, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+rmdir -- Deletes an empty directory.
+
+= SYNOPSIS =
+
+**rmdir** DIRECTORY
+
+= DESCRIPTION =
+  The **rmdir** utility deletes the given DIRECTORY if it is empty.
+= EXIT STATUS =
+The **rmdir** returns 0 if it succeed. On error -1 is returned, and errno is set appropriatly.

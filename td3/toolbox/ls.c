@@ -18,9 +18,9 @@ int main_ls(int argc,char* argv[]){
       perror("lstat");
       return -1;
     }
-    //numero d'I-noeud
+    /*numero d'I-noeud*/
     printf("%lu ",stats->st_ino);    
-    //type de fichier d=directory -=file l=lien symbolic p=pipe
+    /*type de fichier d=directory -=file l=lien symbolic p=pipe*/
     printf("%c",filetype(stats->st_mode));
     //autorisation
     printf("%c%c%c%c%c%c%c%c%c ",allRight(stats->st_mode));

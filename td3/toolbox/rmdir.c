@@ -1,11 +1,10 @@
-#include <toolbox.h>
+#include "toolbox.h"
 
-int main_rmdir (int argc, char* argv[])
+int main_rmdir (const char* file)
 {
-  if (argc != 2) {
-    puts("Bad command use");
-    return -1;
-  }
-
-  return rmdir(argv[1]);
+  if(rmdir(file)){
+		return -1;
+	} else {
+		return EXIT_SUCCESS;
+	}
 }

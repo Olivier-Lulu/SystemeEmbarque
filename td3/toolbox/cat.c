@@ -1,18 +1,14 @@
-#include <toolbox.h>
+#include "toolbox.h"
 
 #define SZ 1024
 
-int main_cat(int argc, char *argv[])
+int main_cat(const char* file)
 {
 	BFILE *bf;
 	ssize_t nb;
 	char buf[SZ];
 	
-	if (argc!=2) {
-		fprintf(stderr,"usage: %s filename\n",argv[0]);
-		return 1;
-	}
-	if ((bf=bopen(argv[1],"r"))==NULL) {
+	if ((bf=bopen(file,"r"))==NULL) {
 		perror("bopen");
 		return 2;
 	}

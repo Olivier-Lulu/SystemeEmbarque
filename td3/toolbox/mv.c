@@ -1,23 +1,28 @@
-#include <toolbox.h>
+#include "toolbox.h"
 
 
 int move (const char * src, const char * dst)
 {
-	int renameResult = rename(src, dst);
+	int res = rename(src, dst);
 	
-	if (renameResult == -1)
+	if (res == -1)
 	{
-		copy(src, dst, mode);
-		//si pas d'erreurs de copy
-		//unlink(src);
+		res = main_cp(src, dst);
+		
+		if (!res){ /*if res is anything but 0, copy failed*/
+			unlink(src);
+		}
 	}
 
-	//return copy ou unlink result
-	return 0;
+	return res;
 }
 
-int main_mv (int argc, char * argv[])
+int main_mv (const char* src, const char * dst)
 {
-	//traitement entree
-	//utilisation de perror
+	if (move(src, dst)){ /*as copy, move return 0 (false) upon success*/
+		puts("mv command failed");
+		return -1;
+	}
+	
+	return EXIT_SUCCESS;
 }

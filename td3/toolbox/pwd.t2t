@@ -7,13 +7,13 @@ November 23, 2017
 
 = NAME =
 
-pwd -- show the filename of the current directory
+pwd -- shows the absolute path to current directory
 
 = SYNOPSIS =
 
 **pwd**
 
 = DESCRIPTION =
-  The **pwd** utility print the full filename of the current working directory.
+  The **pwd** utility prints the full filename of the current working directory.
 = EXIT STATUS =
-The **pwd** return 0 if it succeed. On error -1 is returned.
+The **pwd** returns 0 if it succeed. On error -1 is returned.

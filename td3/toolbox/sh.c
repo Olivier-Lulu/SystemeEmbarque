@@ -17,9 +17,9 @@ int simple_cmd(char* argv[]){
   if(different){
     different = strcmp(argv[0],"exit");
     if(different){
-      //si autre
+      /*si autre*/
       if(fork()){
-	//pere
+	/*pere*/
 	wait(NULL);
 	return 0;
       }else{
@@ -28,11 +28,11 @@ int simple_cmd(char* argv[]){
 	exit(-1);
       }
     }else{
-      //si exit
+      /*si exit*/
       exit(0);
     }
   }else{
-    //si cd
+    /*si cd*/
     chdir(argv[1]);
     return 0;
   }
@@ -94,7 +94,8 @@ int parse_cmd(char * s){
     }
   }
   argv[i] = NULL;
-  for(int j=0;j<i;j++){
+	int j;
+  for(j=0;j<i;j++){
     if(*argv[j] == '$'){
       char * valeur = getenv(argv[j]+1);
       if(valeur)
@@ -192,7 +193,7 @@ int parse_cmd(char * s){
  *utilise par parse_line pour traiter les affectations de variable
  * une affectation est de la forme nom=valeur
  */
-int parse_variable(char* variable,char* valeur){
+int parse_variable(const char* variable, const char* valeur){
   setenv(variable,valeur,1);
   return 0;
 }
@@ -259,7 +260,7 @@ void last_cmd(char * arg)
    }
 }
 
-//parse les cmd utilisant un pipe
+/*parse les cmd utilisant un pipe*/
 int parse_pipe(char * s){
   char* p;
   if((p = strpbrk(s,"|")))
@@ -293,10 +294,10 @@ int parse_line(char * s){
     p++;
     return parse_variable(s,p);
   }else{
-    //p est null donc pas de =
+    /*p est null donc pas de = */
 
     if((p = strpbrk(s,"|")))
-      //si contient un pipe
+      /*si contient un pipe*/
       return parse_pipe(s);
     else
       return parse_cmd(s);  
