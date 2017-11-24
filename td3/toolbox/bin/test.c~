@@ -1,4 +1,9 @@
-int main(int argc, char* argv[]){
-  for(int i=100000;i;--i);
+#include <stdio.h>
+
+int main(int argc,char*argv[]){
+  int c = 0;
+  for(int i = 1000000;i;--i)
+    c++;
+  printf("lul\n");
   return 0;
 }
