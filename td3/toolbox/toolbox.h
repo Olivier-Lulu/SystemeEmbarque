@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/times.h>
@@ -26,6 +27,7 @@ int main_false(int,char*[]);
 
 int main_echo(int, char *[]);
 
+<<<<<<< HEAD
 int main_pwd(int,char*[]);
 
 int main_cat(int, char *[]);
@@ -46,4 +48,23 @@ int main_mv (int,char*[]);
 
 int copy(const char *, const char *, mode_t);
 
+int main_mkdir(const char*, mode_t);
+
+int main_rmdir(const char*);
+
+int main_link(const char*, const char*);
+
+int main_rm(const char*);
+
+int main_cat(const char*);
+
+int main_cp(const char*, const char*);
+
+int main_ln(const char*, const char*);
+
+int main_mv(const char*, const char*);
+
+int main_sh(int, char* []);
+
+int main_time(int, char* []);
 #endif /* _TOOLBOX_H_ */

@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <sys/errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "bio.h"
+#include "toolbox.h"
 
 BFILE *bopen(const char *filename, const char *mode)
 {

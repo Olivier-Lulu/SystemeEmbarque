@@ -1,11 +1,10 @@
 #include "toolbox.h"
 
-int main_rm (int argc, char* argv[])
+int main_rm (const char* file)
 {
-  if (argc != 2) {
-    puts("Bad command use");
-    return -1;
-  }
-
-  return unlink(argv[1]);
+  if(unlink(file)){
+		return -1;
+	} else {
+		return EXIT_SUCCESS;
+	}
 }

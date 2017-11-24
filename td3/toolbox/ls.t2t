@@ -14,6 +14,6 @@ ls -- a function that is equivalent to ls -li in shell
 **true**
 
 = DESCRIPTION =
-  The **ls** utility show files in dir.
+  The **ls** utility shows files in current directory.
 = EXIT STATUS =
-The **ls** utility return 0 under normal circonstance or -1 if any error.
+The **ls** utility returns 0 under normal circonstances or -1 if any error occurs.

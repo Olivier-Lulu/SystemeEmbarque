@@ -321,8 +321,7 @@ int parse_line(char * s){
     p++;
     return parse_variable(s,p);
   }else{
-    /*p est null donc pas de =*/
-
+    /*p est null donc pas de = */
     if((p = strpbrk(s,"|")))
       /*si contient un pipe*/
       return parse_pipe(s);

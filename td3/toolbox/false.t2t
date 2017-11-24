@@ -7,13 +7,13 @@ November 23, 2017
 
 = NAME =
 
-fasle -- a function that fail 
+false -- a function that fails
 
 = SYNOPSIS =
 
 **false**
 
 = DESCRIPTION =
-  The **false** utility alwais fail.
+  The **false** utility always fails.
 = EXIT STATUS =
-The **fasle** utility alwais return -1.
+The **fasle** utility always return -1.

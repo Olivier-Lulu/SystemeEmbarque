@@ -1,6 +1,6 @@
 #include "toolbox.h"
 
-int main_mkdir (int argc, char* argv[])
+int main_mkdir (const char* dir, mode_t mode)
 {
 	if (argc < 2) {
 		puts("Bad command use");

@@ -1,0 +1,19 @@
+RM
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+rm -- Deletes a file.
+
+= SYNOPSIS =
+
+**rm** FILE
+
+= DESCRIPTION =
+  The **pwd** utility deletes the given FILE.
+= EXIT STATUS =
+The **rm** returns 0 if it succeed. On error -1 is returned, and errno is set appropriataly.

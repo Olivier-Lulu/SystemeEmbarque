@@ -1,5 +1,4 @@
 #include "toolbox.h"
-
 #define BUFSZ 1024
 
 int copy(const char * src, const char * dst, mode_t mode)
@@ -37,15 +36,9 @@ int copy(const char * src, const char * dst, mode_t mode)
 	return isRead;
 }
 
-int main_cp(int argc, char * argv[])
+int main_cp(const char* source, const char* dest)
 {
-	if (argc != 3)
-	{
-		fprintf(stderr, "usage %s source_file target_file\n", argv[0]);
-		exit(1);
-	}
-
-	if (copy(argv[1], argv[2], 0666) != 0)
+	if (copy(source, dest, 0666) != 0)
 	{
 		perror("copy");
 		exit(2);
