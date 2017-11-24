@@ -1,0 +1,19 @@
+FALSE
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+fasle -- a function that fail 
+
+= SYNOPSIS =
+
+**false**
+
+= DESCRIPTION =
+  The **false** utility alwais fail.
+= EXIT STATUS =
+The **fasle** utility alwais return -1.

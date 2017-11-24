@@ -1,0 +1,19 @@
+LS
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+ls -- a function that is equivalent to ls -li in shell 
+
+= SYNOPSIS =
+
+**true**
+
+= DESCRIPTION =
+  The **ls** utility show files in dir.
+= EXIT STATUS =
+The **ls** utility return 0 under normal circonstance or -1 if any error.

@@ -1,0 +1,21 @@
+ECHO
+
+January 1, 2009
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+echo -- write arguments to the standard output
+
+= SYNOPSIS =
+
+**echo** [//string// //...// ]
+
+= DESCRIPTION =
+The **echo** utility writes any specified operands, separated by single blank
+(` ') characters and followed by a newline (`\n') character, to the standard output.
+
+= EXIT STATUS =
+The **echo** utility always exists 0.

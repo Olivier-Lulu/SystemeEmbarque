@@ -1,0 +1,20 @@
+LN
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+ln -- a function that create a symbolic link between two file 
+
+= SYNOPSIS =
+
+**ln** [source file] [target file]
+
+= DESCRIPTION =
+  The **ln** utility create a symbolic link between of [source file] at [target file] place.
+  
+= EXIT STATUS =
+  On  success,  zero is returned.  On error, -1 is returned, and errno is set appropriately.

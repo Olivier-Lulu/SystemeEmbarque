@@ -1,0 +1,4 @@
+int main(int argc, char* argv[]){
+  for(int i=100000;i;--i);
+  return 0;
+}

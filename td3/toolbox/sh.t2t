@@ -1,0 +1,25 @@
+SH
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+sh -- a little shell 
+
+= SYNOPSIS =
+
+**sh** [filename]
+
+= DESCRIPTION =
+  The **sh** utility provide a shell interpretor with the following options:
+      - use ('<') and ('>') to redirect input and output to files
+      - use ('|') to redirect input and output to other command
+      - use ('=') to assign value to a variable (exemple: variable=value without blank near the ('='))
+      - use ('$') to interpolate variable already declared
+
+filename is a file containing a script to execute via shell.
+= EXIT STATUS =
+The **sh** utility exists 0 under normal circonstance and -1 if any error.

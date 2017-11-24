@@ -1,0 +1,19 @@
+TRUE
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+true -- a function that succeed 
+
+= SYNOPSIS =
+
+**true**
+
+= DESCRIPTION =
+  The **true** utility alwais succeed.
+= EXIT STATUS =
+The **true** utility alwais return 0.

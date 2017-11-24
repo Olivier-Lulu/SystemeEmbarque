@@ -1,0 +1,19 @@
+PWD
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+pwd -- show the filename of the current directory
+
+= SYNOPSIS =
+
+**pwd**
+
+= DESCRIPTION =
+  The **pwd** utility print the full filename of the current working directory.
+= EXIT STATUS =
+The **pwd** return 0 if it succeed. On error -1 is returned.
