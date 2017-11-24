@@ -1,32 +1,25 @@
 #ifndef _TOOLBOX_H_
 #define _TOOLBOX_H_
 
-#include <libgen.h>
 #include <errno.h>
-#include <string.h>
-#include <unistd.h>
+#include <fcntl.h>
+#include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
+#include <string.h>
 #include <sys/stat.h>
-#include <sys/times.h>
-#include <fcntl.h>
-#include <time.h>
-#include <pwd.h>
-#include <dirent.h>
-#include <grp.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include "bio.h"
 
 int main_echo(int, char *[]);
 
-int main_sh(int, char *[]);
+int mkdir(const char*, mode_t);
 
-int main_false(int, char*[]);
+int rmdir(const char*);
 
-int main_true(int, char*[]);
+int link(const char*, const char*);
 
-int main_pwd(int,char*[]);
+int rm(const char*);
 
-int main_ls(int,char*[]);
 #endif /* _TOOLBOX_H_ */

@@ -1,0 +1,20 @@
+CP
+
+November 24, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+cp -- copy given file to specified pathname if possible.
+
+= SYNOPSIS =
+
+**echo** [filename]
+
+= DESCRIPTION =
+The **cp** utility copy a file to the given pathname if it is valid. It's a buffered copy. cp set perror if it can't open src file, or can't open dest file. 
+
+= EXIT STATUS =
+The **cp** utility exists 0 if it could read the file, 1 if bad arguments are passed, or 2 if given pathnames are not valid.

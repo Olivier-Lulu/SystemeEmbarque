@@ -1,0 +1,20 @@
+MKDIR
+
+November 24, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+mkdir -- create a new and empty file at given pathname.
+
+= SYNOPSIS =
+
+**mkdir** [filename]
+
+= DESCRIPTION =
+The **mkdir** utility creates an empty to given pathname if it is valid. Upon error, it sets errno appropriatly and return -1.
+
+= EXIT STATUS =
+The **mkdir** utility exists 0 if it could create the file, or -1 if any occured.
