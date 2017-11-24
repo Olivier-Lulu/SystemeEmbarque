@@ -27,24 +27,9 @@ int main_false(int,char*[]);
 
 int main_echo(int, char *[]);
 
-<<<<<<< HEAD
 int main_pwd(int,char*[]);
 
-int main_cat(int, char *[]);
-
-int main_mkdir(int,char*[]);
-
-int main_rmdir(int, char *[]);
-
-int main_cp(int, char *[]);
-
 int main_ls(int,char*[]);
-
-int main_sh (int,char *[]);
-
-int main_rm (int, char*[]);
-
-int main_mv (int,char*[]);
 
 int copy(const char *, const char *, mode_t);
 
@@ -67,4 +52,5 @@ int main_mv(const char*, const char*);
 int main_sh(int, char* []);
 
 int main_time(int, char* []);
+
 #endif /* _TOOLBOX_H_ */
