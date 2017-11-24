@@ -1,11 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/times.h>
+#include "toolbox.h"
 
-int main(int argc, char* argv[]){
+int main_time(int argc, char* argv[]){
   if(argc < 2){
     printf("%s [programe]\n",argv[0]);
     return -1;
@@ -17,8 +12,8 @@ int main(int argc, char* argv[]){
     waitpid(pid,&status,0);
     struct tms * t =(struct tms *) malloc(sizeof(struct tms));
     times(t);
-    printf("user time: %d\n",t -> tms_cutime);
-    printf("system time: %d\n",t -> tms_cstime);
+    printf("user time: %lu\n",t -> tms_cutime);
+    printf("system time: %lu\n",t -> tms_cstime);
     free(t);
     return 0;
   }else{

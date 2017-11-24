@@ -1,0 +1,19 @@
+time
+
+November 23, 2017
+
+%!target: man
+%!options(html): --mask-email
+
+= NAME =
+
+time -- run a program and display information about time spent
+
+= SYNOPSIS =
+
+**sh** [program]
+
+= DESCRIPTION =
+  The **time** utility run program and display information about time spent in clock ticks.
+= EXIT STATUS =
+The **time** utility exists 0 under normal circonstance and -1 if any error.

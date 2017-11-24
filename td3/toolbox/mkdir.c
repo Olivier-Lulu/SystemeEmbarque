@@ -1,4 +1,4 @@
-#include <toolbox.h>
+#include "toolbox.h"
 
 int main_mkdir (int argc, char* argv[])
 {
@@ -9,7 +9,7 @@ int main_mkdir (int argc, char* argv[])
 
 	mode_t mode;
 	if (argv[2])
-		mode = argv[2];
+	  mode =*(argv[2]);
 	else
 		mode = 0777;
 

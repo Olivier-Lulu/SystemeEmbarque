@@ -1,3 +1,5 @@
+#include "toolbox.h"
+
 #define BUFSZ 1024
 
 int copy(const char * src, const char * dst, mode_t mode)
@@ -6,12 +8,12 @@ int copy(const char * src, const char * dst, mode_t mode)
 	if ((fhd = open(src, O_RDONLY)) == -1)
 	{	
 		perror("open src");
-		exit (1);
+		return -1;
 	}
 	if ((fhd_w = open(dst, O_WRONLY|O_CREAT|O_EXCL, mode)) == -1)
 	{       
 		perror("open dst");
-		exit (1);
+		return -1;
 	}
 
 	void * bufR = malloc(BUFSZ);

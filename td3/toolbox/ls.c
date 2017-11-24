@@ -14,40 +14,42 @@ int main_ls(int argc,char* argv[]){
     char* name = malloc(sizeof(char)*1024);
     sprintf(name,"./%s",file->d_name);
     struct stat* stats = malloc(sizeof(struct stat));
-    if(lstat(name,stats) == -1){
-      perror("lstat");
+    /*stat ne donne les stats du fichier pointer si name est un lien,
+     mais lstat ne fonctione pas en ansi*/
+    if(stat(name,stats) == -1){
+      perror("stat");
       return -1;
     }
-    //numero d'I-noeud
+    /*numero d'I-noeud*/
     printf("%lu ",stats->st_ino);    
-    //type de fichier d=directory -=file l=lien symbolic p=pipe
+    /*type de fichier d=directory -=file l=lien symbolic p=pipe*/
     printf("%c",filetype(stats->st_mode));
-    //autorisation
+    /*autorisation*/
     printf("%c%c%c%c%c%c%c%c%c ",allRight(stats->st_mode));
-    //lien
+    /*lien*/
     printf("%lu ",stats->st_nlink);
-    // uid
+    /*uid*/
     struct passwd * user = getpwuid(stats->st_uid);
     printf("%s ",user->pw_name);
-    //free(user); -> ca crash
-    // gid
+    /* gid*/
     struct group * grp = getgrgid(stats->st_gid);
     printf("%s ",grp -> gr_name);
-    //free(grp); -> ca crash
-    //size
+    /*size*/
     printf("%lu oct. ",stats->st_size);
-    // date
-    struct tm * t = gmtime(&stats->st_mtim.tv_sec);
+    /* date*/
+    struct tm * t = gmtime(&stats->st_mtime);
     printf("%d %d:%d ",t->tm_mday,t->tm_hour,t->tm_min);
-    //nom
+    /* nom */
     printf("%s",file->d_name);
     if(S_ISLNK(stats->st_mode)){
-      // le fichier est un lien
+      /*le fichier est un lien */
       char cible[1024];
-      int taille = readlink(name,cible,1024);
-      cible[taille] = '\0';
+      cible[0] = '\0';
+      /*readlink(name,cible,1024); ne fonctione pas en ansi
+	open(fd,O_NOFOLLOW); ne fonctione pas en ansi*/
       printf(" -> %s",cible);
     }
     printf("\n");
   }
+  return 0;
 }

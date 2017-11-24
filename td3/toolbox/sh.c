@@ -5,6 +5,14 @@
 
 int parse_line(char * s);
 
+typedef struct env{
+  struct env* next;
+  char* variable;
+  char* value;
+} env;
+
+env * environement = NULL;
+
 /*
  *cmd arg1 ... argN NULL
  *
@@ -17,9 +25,9 @@ int simple_cmd(char* argv[]){
   if(different){
     different = strcmp(argv[0],"exit");
     if(different){
-      //si autre
+      /*si autre*/
       if(fork()){
-	//pere
+	/*pere*/
 	wait(NULL);
 	return 0;
       }else{
@@ -28,11 +36,11 @@ int simple_cmd(char* argv[]){
 	exit(-1);
       }
     }else{
-      //si exit
+      /*si exit*/
       exit(0);
     }
   }else{
-    //si cd
+    /*si cd*/
     chdir(argv[1]);
     return 0;
   }
@@ -67,6 +75,19 @@ int redir_cmd(char* argv[], char* in, char* out) {
   return res;
 }
 
+char * getValue(char * variable){
+  if(environement){
+    env * curr = environement;
+    while(strcmp(curr -> variable,variable) && curr -> next)
+      curr = curr -> next;
+    if(curr)
+      return curr -> value;
+    else
+      return NULL;
+  }else
+    return NULL;
+}
+
 
 /*
  *utilise par parse_line pour parser les cmd standards
@@ -94,9 +115,10 @@ int parse_cmd(char * s){
     }
   }
   argv[i] = NULL;
-  for(int j=0;j<i;j++){
+  int j;
+  for(j=0;j<i;j++){
     if(*argv[j] == '$'){
-      char * valeur = getenv(argv[j]+1);
+      char * valeur = getValue(argv[j]+1);
       if(valeur)
 	argv[j] = valeur;
     }else if(!*argv[j]){
@@ -193,7 +215,13 @@ int parse_cmd(char * s){
  * une affectation est de la forme nom=valeur
  */
 int parse_variable(char* variable,char* valeur){
-  setenv(variable,valeur,1);
+  env * new = malloc(sizeof(env));
+  new -> next = environement;
+  new -> variable =(char*) malloc(sizeof(char)*(strlen(variable)+1));
+  strcpy(new -> variable,variable);
+  new -> value =(char*) malloc(sizeof(char)*(strlen(valeur)+1));
+  strcpy(new -> value,valeur);
+  environement = new;
   return 0;
 }
 
@@ -259,7 +287,7 @@ void last_cmd(char * arg)
    }
 }
 
-//parse les cmd utilisant un pipe
+/*parse les cmd utilisant un pipe*/
 int parse_pipe(char * s){
   char* p;
   if((p = strpbrk(s,"|")))
@@ -293,10 +321,10 @@ int parse_line(char * s){
     p++;
     return parse_variable(s,p);
   }else{
-    //p est null donc pas de =
+    /*p est null donc pas de =*/
 
     if((p = strpbrk(s,"|")))
-      //si contient un pipe
+      /*si contient un pipe*/
       return parse_pipe(s);
     else
       return parse_cmd(s);  

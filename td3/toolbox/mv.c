@@ -1,4 +1,4 @@
-#include <toolbox.h>
+#include "toolbox.h"
 
 
 int move (const char * src, const char * dst)
@@ -7,17 +7,28 @@ int move (const char * src, const char * dst)
 	
 	if (renameResult == -1)
 	{
-		copy(src, dst, mode);
-		//si pas d'erreurs de copy
-		//unlink(src);
+	  if((copy(src, dst, 0)) != 0){
+		if(unlink(src)==-1){
+		  perror("unlink");
+		  return -1;
+		}
+	  }else{
+		  perror("copy");
+		  return -1;
+		}
 	}
-
-	//return copy ou unlink result
 	return 0;
 }
 
 int main_mv (int argc, char * argv[])
 {
-	//traitement entree
-	//utilisation de perror
+  if(argc != 3){
+    printf("%s [sourcefile] [destfile]",argv[0]);
+    exit(1);
+  }
+  if(move(argv[1],argv[2]) != 0){
+    perror("move");
+    exit(1);
+  }
+  return 0;
 }
