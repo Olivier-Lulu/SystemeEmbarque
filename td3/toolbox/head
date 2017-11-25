@@ -1,0 +1,2 @@
+gcc -Wall -Werror -ansi -g   -c -o link.o link.c
+<commande interne> : la recette pour la cible « link.o » a échouée

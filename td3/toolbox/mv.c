@@ -1,29 +1,25 @@
 #include "toolbox.h"
 
-
-int move (const char * src, const char * dst)
+int main_mv (int argc, char * argv[])
 {
-	int res = rename(src, dst);
-	
-	if (res == -1)
-	  {
-	    res = main_cp(src, dst);
-	    
-	    if (!res){ /*if res is anything but 0, copy failed*/
-	      unlink(src);
-	    }
-	  }
-	
-	return res;
-}
+	if (argc != 3)
+	{
+		puts("Bad command use.");
+		return -1;
+	}
 
-int main_mv (const char* src, const char * dst)
-{
-  if(argc != 3){
-    printf("%s [sourcefile] [destfile]",argv[0]);
-    exit(1);
-  }
-  if (move(src, dst)){ /*as copy, move return 0 (false) upon success*/
+	int res = rename(argv[1], argv[2]);
+
+  if (res == -1)
+    {
+      res = main_cp(argc, argv);
+
+      if (!res){ /*if res is anything but 0, copy failed*/
+        unlink(argv[1]);
+      }
+    }
+
+  if (res){ /*res is still 0 (false) upon success*/
     puts("mv command failed");
     return -1;
   }

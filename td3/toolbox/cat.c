@@ -2,13 +2,18 @@
 
 #define SZ 1024
 
-int main_cat(const char* file)
+int main_cat(int argc, char* argv[])
 {
+	if (argc!=2) {
+		fprintf(stderr,"usage: %s filename\n",argv[0]);
+		return 1;
+	}
+	
 	BFILE *bf;
 	ssize_t nb;
 	char buf[SZ];
 	
-	if ((bf=bopen(file,"r"))==NULL) {
+	if ((bf=bopen(argv[1],"r"))==NULL) {
 		perror("bopen");
 		return 2;
 	}

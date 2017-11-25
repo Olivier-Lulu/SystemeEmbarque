@@ -31,23 +31,21 @@ int main_pwd(int,char*[]);
 
 int main_ls(int,char*[]);
 
-int copy(const char *, const char *, mode_t);
+int main_cp(int, char *[]);
 
-int main_mkdir(const char*, mode_t);
+int main_mkdir(int, char*[]);
 
-int main_rmdir(const char*);
+int main_rmdir(int, char*[]);
 
-int main_link(const char*, const char*);
+int main_link(int, char*[]);
 
-int main_rm(const char*);
+int main_rm(int, char*[]);
 
-int main_cat(const char*);
+int main_cat(int, char*[]);
 
-int main_cp(const char*, const char*);
+int main_cp(int, char*[]);
 
-int main_ln(const char*, const char*);
-
-int main_mv(const char*, const char*);
+int main_mv(int, char*[]);
 
 int main_sh(int, char* []);
 
